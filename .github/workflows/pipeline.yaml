@@ -1,0 +1,45 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install Dependencies
+      run : |
+        pip install -r requirements.txt
+
+    - name: run Tests
+      run : |
+        echo "RUNNING TESTS"
+
+
+    - name: Build images
+      run : |
+        docker build -t sahilmahat/cicd .
+
+    - name: login to dockerhub
+      uses: docker/login-action@v2
+      with:
+        username: 
+        password:
+    
+    - name: Push Docker Image
+      run : |
+        docker push sahilmahat/cicd
+
